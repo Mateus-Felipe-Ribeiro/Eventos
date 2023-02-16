@@ -7,6 +7,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EventosComponent } from './eventos/eventos.component';
 import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { TourNgBootstrapModule } from 'ngx-ui-tour-ng-bootstrap';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { PalestrantesComponent } from './palestrantes/palestrantes.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    TourNgBootstrapModule,
+    MatIconModule,
     TooltipModule.forRoot(),
   ],
   providers: [],

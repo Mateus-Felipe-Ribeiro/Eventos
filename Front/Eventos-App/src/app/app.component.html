@@ -4,4 +4,35 @@
   <app-palestrantes></app-palestrantes>
 
   <router-outlet></router-outlet>
+  <tour-step-template>
+    <ng-template #tourStep let-step="step">
+      <button mat-icon-button (click)="tourService.end()" class="close">
+        <mat-icon>close</mat-icon>
+      </button>
+      <p class="tour-step-content" [innerHTML]="step?.content"></p>
+      <div class="tour-step-navigation">
+        <button
+          *ngIf="tourService.hasPrev(step)"
+          class="btn btn-sm btn-default"
+          (click)="tourService.prev()"
+        >
+          « Voltar
+        </button>
+        <button
+          *ngIf="tourService.hasNext(step)"
+          class="btn btn-sm btn-default"
+          (click)="tourService.next()"
+        >
+          Avançar »
+        </button>
+        <button
+          class="btn btn-sm btn-default"
+          (click)="tourService.end()"
+          *ngIf="!tourService.hasNext(step)"
+        >
+          Finalizar
+        </button>
+      </div>
+    </ng-template>
+  </tour-step-template>
 </div>
