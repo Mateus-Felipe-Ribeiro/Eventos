@@ -6,9 +6,11 @@
   <router-outlet></router-outlet>
   <tour-step-template>
     <ng-template #tourStep let-step="step">
-      <button mat-icon-button (click)="tourService.end()" class="close">
-        <mat-icon>close</mat-icon>
-      </button>
+      <div class="header-group">
+        <button mat-icon-button (click)="tourService.end()" class="close">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
       <p class="tour-step-content" [innerHTML]="step?.content"></p>
       <div class="tour-step-navigation">
         <button
@@ -19,7 +21,7 @@
           « Voltar
         </button>
         <button
-          *ngIf="tourService.hasNext(step)"
+          *ngIf="tourService.hasNext(step) && !step.nextOnAnchorClick"
           class="btn btn-sm btn-default"
           (click)="tourService.next()"
         >
