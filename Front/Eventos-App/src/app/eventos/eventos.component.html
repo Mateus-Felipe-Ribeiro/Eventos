@@ -1,8 +1,66 @@
 <h1 tourAnchor="some.anchor.id" class="background-h1">Eventos</h1>
-<div *ngFor="let evento of eventos">
-  <p><b>ID: </b>{{evento.eventoId}}</p>
-  <p><b>Local: </b>{{evento.local}}</p>
-  <p><b>Tema: </b>{{evento.tema}}</p>
-  <hr>
+<hr />
+<div class="row mb-3">
+  <label class="col-sm-1 col-form-label col-form-label-lg" aria-label="filtro">Filtro:</label>
+  <div class="col-sm-2">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar"
+      [(ngModel)]="filtroLista"
+      aria-label="buscar"
+      aria-describedby="buscar"
+    />
+  </div>
 </div>
-<div tourAnchor="terceiro"><p>mia pica</p></div>
+<table class="table table-striped">
+  <thead class="table-dark">
+    <tr>
+      <th>
+        <button (click)="mostrarImg()" class="btn btn-outline-light btn-sm">
+          {{ !mostrarImagem ? "Mostrar" : "Ocultar" }}
+        </button>
+      </th>
+      <th>#</th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="eventos && eventos.length">
+    <tr *ngFor="let evento of eventosFiltrados">
+      <td>
+        <img
+          [collapse]="!mostrarImagem"
+          [isAnimated]="true"
+          src="/assets/{{ evento.imagemURL }}"
+          alt="Imagem {{ evento.tema }}"
+          [style.width.px]="50"
+        />
+      </td>
+      <td>{{ evento.eventoId }}</td>
+      <td>{{ evento.tema }}</td>
+      <td>{{ evento.local }}</td>
+      <td>{{ evento.dataEvento }}</td>
+      <td>{{ evento.qtdPessoas }}</td>
+      <td>{{ evento.lote }}</td>
+      <td>
+        <div class="btn-group" role="group" aria-label="Ações Editar/Excluir">
+          <button type="button" class="btn btn-warning">Editar</button>
+          <button type="button" class="btn btn-danger">Excluir</button>
+        </div>
+    </td>
+    </tr>
+  </tbody>
+  <tfoot *ngIf="!eventos.length">
+    <tr>
+      <td colspan="8" class="text-center">
+        <h4>Nenhum evento encontrado!</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+<div tourAnchor="terceiro"><p></p></div>

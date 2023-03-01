@@ -10,12 +10,16 @@ import { PalestrantesComponent } from './palestrantes/palestrantes.component';
 import { TourNgBootstrapModule } from 'ngx-ui-tour-ng-bootstrap';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NavComponent } from './nav/nav.component';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     EventosComponent,
-    PalestrantesComponent
+    PalestrantesComponent,
+    NavComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +29,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     MatIconModule,
     TooltipModule.forRoot(),
     BrowserAnimationsModule,
+    CollapseModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
