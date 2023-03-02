@@ -24,6 +24,8 @@
     "@ng-bootstrap/ng-bootstrap": "^14.0.1",
     "bootstrap": "^5.2.3",
     "ngx-bootstrap": "^10.2.0",
+    "ngx-spinner": "^15.0.1",
+    "ngx-toastr": "^16.0.2",
     "ngx-ui-tour-ng-bootstrap": "^12.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
