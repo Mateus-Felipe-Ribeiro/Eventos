@@ -71,8 +71,48 @@ namespace Eventos.API.Controllers
         }
 
         [HttpPost]
-        public string Post(){
-            return "exemplo de post";
+        public async Task<IActionResult> Post(Evento model){
+            try
+            {
+                var evento = await _eventoService.AddEvento(model);
+                if (evento == null) return BadRequest("Erro ao inserir evento.");
+
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar inserir Evento. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Evento model){
+            try
+            {
+                var evento = await _eventoService.UpdateEvento(id, model);
+                if (evento == null) return BadRequest("Erro ao atualizar evento.");
+
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar atualizar Evento. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id){
+            try
+            {
+                if(await _eventoService.DeleteEvento(id))
+                    return Ok("Evento deletedo");
+                else
+                    return BadRequest("Erro ao excluir evento.");
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar excluir Evento. Erro: {ex.Message}");
+            }
         }
     }
 }

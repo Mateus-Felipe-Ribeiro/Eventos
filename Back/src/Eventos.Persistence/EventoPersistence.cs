@@ -13,7 +13,7 @@ namespace Eventos.Persistence
         public EventoPersistence(EventosContext context)
         {
             this._context = context;
-            
+            _context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
     
         public async Task<Evento> GetEventoByIdAsync(int eventoId, bool includePalestrantes = false)
@@ -28,7 +28,7 @@ namespace Eventos.Persistence
                 .ThenInclude(pe => pe.Palestrante);
             }
 
-            query = query.OrderBy(e => e.Id).Where(e => e.Id == eventoId);
+            query = query.OrderBy(e => e.Id).Where(e => e.Id == eventoId); //.AsNoTracking()
 
             return await query.FirstOrDefaultAsync();
         }

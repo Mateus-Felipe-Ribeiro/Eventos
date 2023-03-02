@@ -1,4 +1,8 @@
+using Eventos.Application;
+using Eventos.Application.Contratos;
+using Eventos.Persistence;
 using Eventos.Persistence.Contexto;
+using Eventos.Persistence.Contratos;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +28,15 @@ namespace Eventos.API
             services.AddDbContext<EventosContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(
+                    x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+            services.AddScoped<IEventoService, EventoService>();
+            services.AddScoped<IGeralPersist, GeralPersistence>();
+            services.AddScoped<IEventoPersist, EventoPersistence>();
+
             services.AddCors();
             services.AddSwaggerGen(c =>
             {
