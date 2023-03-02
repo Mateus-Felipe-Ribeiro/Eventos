@@ -2,28 +2,7 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css";
 @import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
-
-.background-h1 {
-  background-color: gray;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 16px;
-  font-style: bold;
-  font-weight: 600;
-  padding: 4px;
-  border: 1px solid black;
-  border-radius: 2px;
-  margin: 5px 0;
-  color: #ffffff;
-}
-
-.close {
-  border: 0 solid #ffffff;
-}
-
-.header-group {
-  display: flex;
-  justify-content: end;
-}
+@import "../node_modules/bootswatch/dist/vapor/bootstrap.min.css";
 
 html,
 body {
