@@ -19,6 +19,7 @@ export class EventoListaComponent {
   public mostrarImagem = true;
   private filtroListado: string = '';
   public modalRef?: BsModalRef;
+  public eventoId = 0;
 
   public get filtroLista(): string {
     return this.filtroListado;
@@ -74,13 +75,30 @@ export class EventoListaComponent {
     this.mostrarImagem = !this.mostrarImagem;
   }
 
-  public openModal(template: TemplateRef<any>): void {
+  public openModal(event: any, template: TemplateRef<any>, eventoId: number): void {
+    event.stopPropagation();
+    this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   public confirm(): void {
     this.modalRef?.hide();
-    this.toastr.success('maluco deu boa', 'Sucesso!');
+    this.spinner.show();
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result: any) => {
+        this.toastr.success('Evento removido.', 'Sucesso!');
+        this.spinner.hide();
+        this.carregarElementos();
+      },
+      (error: any) => {
+        console.log(error)
+        this.spinner.hide();
+        this.toastr.error(`Erro ao remover Evento código: ${this.eventoId}` , 'Erro');
+      },
+      () => {
+        this.spinner.hide();
+      },
+    )
   }
 
   public decline(): void {

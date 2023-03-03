@@ -20,4 +20,16 @@ export class EventoService {
   public getEventoById(id: number): Observable<Evento>{
     return this.http.get<Evento>(`${this.enviroment}/${id}`);
   }
+
+  public postEvento(evento: Evento): Observable<Evento>{
+    return this.http.post<Evento>(this.enviroment, evento);
+  }
+
+  public putEvento(id: number, evento: Evento): Observable<Evento>{
+    return this.http.put<Evento>(`${this.enviroment}/${id}`, evento);
+  }
+
+  public deleteEvento(id: number): Observable<any>{
+    return this.http.delete(`${this.enviroment}/${id}`);
+  }
 }

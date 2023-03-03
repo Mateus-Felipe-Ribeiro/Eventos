@@ -105,7 +105,7 @@ namespace Eventos.API.Controllers
                 if (evento == null) return NoContent();
 
                 if(await _eventoService.DeleteEvento(id))
-                    return Ok("Evento deletedo");
+                    return Ok(new { message = "Evento deletedo" });
                 else
                     throw new Exception("Ocorreu um problema não específico ao tentar deletar o Evento.");
             }
