@@ -3,13 +3,14 @@ import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
-import { Evento } from 'src/app/models/Evento';
-import { EventoService } from 'src/app/services/evento.service';
+
+import { Evento } from '@app/models/Evento';
+import { EventoService } from '@app/services/evento.service';
 
 @Component({
   selector: 'app-evento-lista',
   templateUrl: './evento-lista.component.html',
-  styleUrls: ['./evento-lista.component.scss']
+  styleUrls: ['./evento-lista.component.scss'],
 })
 export class EventoListaComponent {
   public enviroment = 'https://localhost:5001/api/eventos';
@@ -44,7 +45,7 @@ export class EventoListaComponent {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    private router: Router,
+    private router: Router
   ) {}
 
   public ngOnInit(): void {
@@ -86,7 +87,7 @@ export class EventoListaComponent {
     this.modalRef?.hide();
   }
 
-  public detalheEvento(id: number): void{
+  public detalheEvento(id: number): void {
     this.router.navigate([`eventos/detalhe/${id}`]);
   }
 }
