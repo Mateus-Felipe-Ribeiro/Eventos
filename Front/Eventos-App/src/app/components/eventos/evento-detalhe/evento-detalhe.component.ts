@@ -57,13 +57,9 @@ export class EventoDetalheComponent implements OnInit {
         },
         (error: any) => {
           console.log(error)
-          this.spinner.hide();
           this.toastr.error('Erro ao tentar carregar Evento.','Erro.');
         },
-        () => {
-          this.spinner.hide();
-        },
-      );
+      ).add(() => {this.spinner.hide();});
     }
   }
 
@@ -90,37 +86,19 @@ export class EventoDetalheComponent implements OnInit {
   public salvarAlteracao(): void{
     this.spinner.show();
     if(this.form.valid){
-      if(this.modoSalvar=='post'){
-        this.evento = {...this.form.value};
-        this.eventoService.postEvento(this.evento).subscribe(
-          () => {
-            this.toastr.success('Evento salvo com sucesso!','Sucesso');
-          },
-          (error: any) => {
-            console.log(error);
-            this.spinner.hide();
-            this.toastr.error('Erro ao salvar Evento', 'Erro');
-          },
-          () => {
-            this.spinner.hide();
-          },
-        );
-      }else{
-        this.evento = {id: this.evento.id, ...this.form.value};
-        this.eventoService.putEvento(this.evento.id, this.evento).subscribe(
-          () => {
-            this.toastr.success('Evento salvo com sucesso!','Sucesso');
-          },
-          (error: any) => {
-            console.log(error);
-            this.spinner.hide();
-            this.toastr.error('Erro ao salvar Evento', 'Erro');
-          },
-          () => {
-            this.spinner.hide();
-          },
-        );
-      }
+      this.evento = (this.modoSalvar=='post')
+      ?  {...this.form.value}
+      :  {id: this.evento.id, ...this.form.value}
+
+      this.eventoService[this.modoSalvar](this.evento).subscribe(
+        () => {
+          this.toastr.success('Evento salvo com sucesso!','Sucesso');
+        },
+        (error: any) => {
+          console.log(error);
+          this.toastr.error('Erro ao salvar Evento', 'Erro');
+        },
+      ).add(() => {this.spinner.hide();});
     }
   }
 }

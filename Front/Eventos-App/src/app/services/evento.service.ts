@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Evento } from '../models/Evento';
 
 @Injectable()
@@ -10,26 +10,32 @@ export class EventoService {
   constructor(public http: HttpClient) {}
 
   public getEventos(): Observable<Evento[]>{
-    return this.http.get<Evento[]>(this.enviroment);
+    return this.http.get<Evento[]>(this.enviroment)
+    .pipe(take(1));
   }
 
   public getEventosByTema(tema: string): Observable<Evento[]>{
-    return this.http.get<Evento[]>(`${this.enviroment}/${tema}/tema`);
+    return this.http.get<Evento[]>(`${this.enviroment}/${tema}/tema`)
+    .pipe(take(1));
   }
 
   public getEventoById(id: number): Observable<Evento>{
-    return this.http.get<Evento>(`${this.enviroment}/${id}`);
+    return this.http.get<Evento>(`${this.enviroment}/${id}`)
+    .pipe(take(1));
   }
 
-  public postEvento(evento: Evento): Observable<Evento>{
-    return this.http.post<Evento>(this.enviroment, evento);
+  public post(evento: Evento): Observable<Evento>{
+    return this.http.post<Evento>(this.enviroment, evento)
+    .pipe(take(1));
   }
 
-  public putEvento(id: number, evento: Evento): Observable<Evento>{
-    return this.http.put<Evento>(`${this.enviroment}/${id}`, evento);
+  public put(evento: Evento): Observable<Evento>{
+    return this.http.put<Evento>(`${this.enviroment}/${evento.id}`, evento)
+    .pipe(take(1));
   }
 
   public deleteEvento(id: number): Observable<any>{
-    return this.http.delete(`${this.enviroment}/${id}`);
+    return this.http.delete(`${this.enviroment}/${id}`)
+    .pipe(take(1));
   }
 }

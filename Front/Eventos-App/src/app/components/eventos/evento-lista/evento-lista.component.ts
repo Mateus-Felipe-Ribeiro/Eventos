@@ -55,20 +55,15 @@ export class EventoListaComponent {
   }
 
   public carregarElementos(): void {
-    this.eventoService.getEventos().subscribe({
-      next: (res: Evento[]) => {
+    this.eventoService.getEventos().subscribe(
+      (res: Evento[]) => {
         this.eventos = res;
         this.eventosFiltrados = this.eventos;
-        this.spinner.hide();
       },
-      error: (error) => {
-        this.spinner.hide();
+      (error) => {
         this.toastr.error('Erro ao carregar eventos', 'Erro!');
       },
-      complete: () => {
-        this.spinner.hide();
-      },
-    });
+    ).add(() => this.spinner.hide());
   }
 
   public mostrarImg(): void {
@@ -87,18 +82,13 @@ export class EventoListaComponent {
     this.eventoService.deleteEvento(this.eventoId).subscribe(
       (result: any) => {
         this.toastr.success('Evento removido.', 'Sucesso!');
-        this.spinner.hide();
         this.carregarElementos();
       },
       (error: any) => {
         console.log(error)
-        this.spinner.hide();
         this.toastr.error(`Erro ao remover Evento código: ${this.eventoId}` , 'Erro');
       },
-      () => {
-        this.spinner.hide();
-      },
-    )
+    ).add(() => this.spinner.hide());
   }
 
   public decline(): void {
