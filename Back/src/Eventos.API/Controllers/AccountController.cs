@@ -1,0 +1,86 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Eventos.Application.Contratos;
+using Eventos.Application.Dtos;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Eventos.API.Controllers
+{
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountController : ControllerBase
+    {
+        private readonly IAccountService _accountService;
+        private readonly ITokenService _tokenService;
+        public AccountController(IAccountService accountService, ITokenService tokenService)
+        {
+            _tokenService = tokenService;
+            _accountService = accountService;
+        }
+
+        [HttpGet("GetUser/{username}")]
+        public async Task<IActionResult> GetUser(string username)
+        {
+            try
+            {
+                var user = await _accountService.GetUserByUserNameAsync(username);
+
+                return Ok(user);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recurepar usuário. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPost("Register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(UserDto userDto)
+        {
+            try
+            {
+                if(await _accountService.UserExists(userDto.Username))
+                    return BadRequest("Usuário já existe");
+
+                var user = await _accountService.CreateAccountAsync(userDto);
+                if(user != null)
+                    return Ok(user);
+
+                return BadRequest("Usuário não criado, tente novamente mais tarde");
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recurepar usuário. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(UserLoginDto userLogin)
+        {
+            try
+            {
+                var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);
+                if(user == null) return Unauthorized("Usuário inválido");
+
+                var result = await _accountService.CheckUserPasswordAsync(user, userLogin.Password);
+                if(!result.Succeeded) return Unauthorized("Senha inválida");
+                
+                return Ok( new {
+                    userName = user.UserName,
+                    PrimeiroNome = user.PrimeiroNome,
+                    token = _tokenService.CreateToken(user).Result
+                });
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recurepar usuário. Erro: {ex.Message}");
+            }
+        }
+    }
+}

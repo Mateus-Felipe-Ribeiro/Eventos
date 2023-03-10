@@ -3,14 +3,16 @@ using System;
 using Eventos.Persistence.Contexto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Eventos.Persistence.Migrations
 {
     [DbContext(typeof(EventosContext))]
-    partial class EventosContextModelSnapshot : ModelSnapshot
+    [Migration("20230310174233_Adicionando-Identity")]
+    partial class AdicionandoIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

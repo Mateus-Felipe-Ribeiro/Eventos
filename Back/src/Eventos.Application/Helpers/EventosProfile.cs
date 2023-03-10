@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Eventos.Application.Dtos;
 using Eventos.Domain;
+using Eventos.Domain.Identity;
 
 namespace Eventos.Application.Helpers
 {
@@ -16,6 +17,9 @@ namespace Eventos.Application.Helpers
             CreateMap<Lote, LoteDto>().ReverseMap();
             CreateMap<RedeSocial, RedeSocialDto>().ReverseMap();
             CreateMap<Palestrante, PalestranteDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserLoginDto>().ReverseMap();
+            CreateMap<User, UserUpdateDto>().ReverseMap();
         }
     }
 }
