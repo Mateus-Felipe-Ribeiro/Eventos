@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { HomeComponent } from './components/home/home.component';
+
 import { ContatosComponent } from './components/contatos/contatos.component';
 
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -16,10 +18,13 @@ import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { UserComponent } from './components/user/user.component';
 
+import { AuthGuard } from './guard/auth.guard';
+
 const routes: Routes = [
   {
-    path: 'user',
-    redirectTo: 'user/login'
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full'
   },
   {
     path: 'user',
@@ -36,51 +41,61 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'user/perfil',
-    component: PerfilComponent,
-  },
-  {
-    path: 'eventos',
-    redirectTo: 'eventos/lista'
-  },
-  {
-    path: 'eventos',
-    component: EventosComponent,
-    children:[
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
       {
-        path:'lista',
-        component: EventoListaComponent,
+        path: 'user',
+        redirectTo: 'user/perfil',
       },
       {
-        path: 'detalhe',
-        component: EventoDetalheComponent,
+        path: 'user/perfil',
+        component: PerfilComponent,
       },
       {
-        path: 'detalhe/:id',
-        component: EventoDetalheComponent,
-      }
+        path: 'eventos',
+        redirectTo: 'eventos/lista'
+      },
+      {
+        path: 'eventos',
+        component: EventosComponent,
+        children:[
+          {
+            path:'lista',
+            component: EventoListaComponent,
+          },
+          {
+            path: 'detalhe',
+            component: EventoDetalheComponent,
+          },
+          {
+            path: 'detalhe/:id',
+            component: EventoDetalheComponent,
+          }
+        ],
+      },
+      {
+        path: 'palestrantes',
+        component: PalestrantesComponent,
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
+        path: 'contatos',
+        component: ContatosComponent,
+      },
     ]
   },
   {
-    path: 'palestrantes',
-    component: PalestrantesComponent,
-  },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-  },
-  {
-    path: 'contatos',
-    component: ContatosComponent,
-  },
-  {
-    path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    path: 'home',
+    component: HomeComponent,
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
 ];

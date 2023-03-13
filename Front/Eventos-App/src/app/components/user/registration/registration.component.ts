@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ValidatorField } from '@app/helpers/validatorField';
+import { User } from '@app/models/identity/User';
+import { AccountService } from '@app/services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -9,13 +13,19 @@ import { ValidatorField } from '@app/helpers/validatorField';
 })
 export class RegistrationComponent implements OnInit{
 
+  user = {} as User;
   form: any;
 
   get f(): any{
     return this.form.controls;
   }
 
-  constructor(private fb: FormBuilder){}
+  constructor(
+    private fb: FormBuilder,
+    private accountService: AccountService,
+    private router: Router,
+    private toastr: ToastrService
+    ){}
 
   ngOnInit(): void {
     this.validation();
@@ -24,7 +34,7 @@ export class RegistrationComponent implements OnInit{
   public validation(): void{
 
     const formOptions: AbstractControlOptions = {
-      validators: ValidatorField.MustMatch('senha', 'confirmaSenha')
+      validators: ValidatorField.MustMatch('password', 'confirmaPassword')
     };
 
     this.form = this.fb.group({
@@ -32,14 +42,22 @@ export class RegistrationComponent implements OnInit{
       ultimoNome: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       username: ['', Validators.required],
-      senha: ['', [Validators.required, Validators.minLength(6)]],
-      confirmaSenha: ['', Validators.required],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmaPassword: ['', Validators.required],
     }, formOptions);
   }
 
-  onSubmit(): void{
-    if(this.form.invalid){
-      return;
+  register(): void{
+    if(this.form.valid){
+      this.user = {...this.form.value};
+      this.accountService.register(this.user).subscribe(
+        () => {
+          this.router.navigateByUrl('/dashboard')
+        },
+        (error: any) => {
+          this.toastr.error('Erro: '+error.error);
+        }
+      );
     }
   }
 

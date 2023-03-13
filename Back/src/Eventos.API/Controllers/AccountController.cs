@@ -52,7 +52,11 @@ namespace Eventos.API.Controllers
 
                 var user = await _accountService.CreateAccountAsync(userDto);
                 if(user != null)
-                    return Ok(user);
+                    return Ok( new {
+                        userName = user.UserName,
+                        PrimeiroNome = user.PrimeiroNome,
+                        token = _tokenService.CreateToken(user).Result
+                    });
 
                 return BadRequest("Usuário não criado, tente novamente mais tarde");
             }

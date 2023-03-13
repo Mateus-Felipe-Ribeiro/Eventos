@@ -12,7 +12,7 @@
   </div>
 
   <div class="col-md-6">
-    <form class="row g-3 p-1" [formGroup]="form">
+    <form class="row g-3 p-1" [formGroup]="form" (ngSubmit)="register()">
       <div class="col-12 d-block d-md-none">
         <h3 class="border-bottom">Cadastro de Usuário</h3>
       </div>
@@ -78,14 +78,14 @@
         <input
           class="form-control"
           type="password"
-          [ngClass]="{'is-invalid': f.senha.errors && f.senha.touched }"
-          formControlName="senha"
+          [ngClass]="{'is-invalid': f.password.errors && f.password.touched }"
+          formControlName="password"
           placeholder="Digite uma Senha"
         />
-        <div *ngIf="f.senha.errors ?.required" class="invalid-feedback">
+        <div *ngIf="f.password.errors ?.required" class="invalid-feedback">
           Senha é obrigatório
         </div>
-        <div *ngIf="f.senha.errors ?.minlength" class="invalid-feedback">
+        <div *ngIf="f.password.errors ?.minlength" class="invalid-feedback">
           Tamanho mínimo é 6 caracteres
         </div>
       </div>
@@ -94,14 +94,14 @@
         <input
           class="form-control"
           type="password"
-          [ngClass]="{'is-invalid': f.confirmaSenha.errors && f.confirmaSenha.touched }"
-          formControlName="confirmaSenha"
+          [ngClass]="{'is-invalid': f.confirmaPassword.errors && f.confirmaPassword.touched }"
+          formControlName="confirmaPassword"
           placeholder="Confirme a Senha"
         />
-        <div *ngIf="f.confirmaSenha.errors ?.required" class="invalid-feedback">
+        <div *ngIf="f.confirmaPassword.errors ?.required" class="invalid-feedback">
           Confirmar senha é obrigatório
         </div>
-        <div *ngIf="f.confirmaSenha.errors ?.mustMatch" class="invalid-feedback">
+        <div *ngIf="f.confirmaPassword.errors ?.mustMatch" class="invalid-feedback">
           Senhas não coincidem
         </div>
       </div>
@@ -115,7 +115,7 @@
         </div>
       </div>
       <div class="col-12 d-grid gap-2">
-          <button class="btn btn-lg btn-success px-5">
+          <button [disabled]="!form.valid" class="btn btn-lg btn-success px-5" type="submit">
             Registar
           </button>
       </div>
