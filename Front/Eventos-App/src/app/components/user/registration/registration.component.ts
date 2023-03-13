@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ValidatorField } from '@app/helpers/validatorField';
+import { ValidatorField } from '@app/helpers/ValidatorField';
 import { User } from '@app/models/identity/User';
 import { AccountService } from '@app/services/account.service';
 import { ToastrService } from 'ngx-toastr';

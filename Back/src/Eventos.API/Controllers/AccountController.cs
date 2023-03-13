@@ -47,12 +47,13 @@ namespace Eventos.API.Controllers
         {
             try
             {
-                if(await _accountService.UserExists(userDto.Username))
+                if (await _accountService.UserExists(userDto.Username))
                     return BadRequest("Usuário já existe");
 
                 var user = await _accountService.CreateAccountAsync(userDto);
-                if(user != null)
-                    return Ok( new {
+                if (user != null)
+                    return Ok(new
+                    {
                         userName = user.UserName,
                         PrimeiroNome = user.PrimeiroNome,
                         token = _tokenService.CreateToken(user).Result
@@ -73,12 +74,13 @@ namespace Eventos.API.Controllers
             try
             {
                 var user = await _accountService.GetUserByUserNameAsync(userLogin.UserName);
-                if(user == null) return Unauthorized("Usuário inválido");
+                if (user == null) return Unauthorized("Usuário inválido");
 
                 var result = await _accountService.CheckUserPasswordAsync(user, userLogin.Password);
-                if(!result.Succeeded) return Unauthorized("Senha inválida");
-                
-                return Ok( new {
+                if (!result.Succeeded) return Unauthorized("Senha inválida");
+
+                return Ok(new
+                {
                     userName = user.UserName,
                     PrimeiroNome = user.PrimeiroNome,
                     token = _tokenService.CreateToken(user).Result
@@ -95,14 +97,22 @@ namespace Eventos.API.Controllers
         {
             try
             {
+                if (userUpdateDto.UserName != User.GetUserName())
+                    return Unauthorized("Usuário inválido");
+
                 var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
-                if(user == null) return Unauthorized("Usuário inválido");
+                if (user == null) return Unauthorized("Usuário inválido");
 
                 var userReturn = await _accountService.UpdateAccount(userUpdateDto);
-                if(userReturn == null)
+                if (userReturn == null)
                     return NoContent();
 
-                return Ok(userReturn);
+                return Ok(new
+                {
+                    userName = userReturn.UserName,
+                    PrimeiroNome = userReturn.PrimeiroNome,
+                    token = _tokenService.CreateToken(userReturn).Result
+                });
             }
             catch (System.Exception ex)
             {

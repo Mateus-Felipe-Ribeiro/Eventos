@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TourService } from 'ngx-ui-tour-ng-bootstrap';
+import { User } from './models/identity/User';
+import { AccountService } from './services/account.service';
 
 @Component({
   selector: 'app-root',
@@ -7,16 +9,23 @@ import { TourService } from 'ngx-ui-tour-ng-bootstrap';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'Eventos-App';
-
   constructor(
-    public tourService: TourService
-  ){
-
-  }
+    public tourService: TourService,
+    public accountService: AccountService,
+  ){}
 
   ngOnInit(): void {
-
+    this.setCurrentUser();
   }
 
+  setCurrentUser(): void {
+    let user: User;
+    if(localStorage.getItem('user')){
+      user = JSON.parse(localStorage.getItem('user') ?? '{}');
+    }else{
+      user = null;
+    }
+    if(user)
+      this.accountService.setCurrentUser(user);
+  }
 }
