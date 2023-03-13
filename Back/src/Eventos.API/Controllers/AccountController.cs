@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Eventos.API.Extensions;
 using Eventos.Application.Contratos;
 using Eventos.Application.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -23,11 +25,12 @@ namespace Eventos.API.Controllers
             _accountService = accountService;
         }
 
-        [HttpGet("GetUser/{username}")]
-        public async Task<IActionResult> GetUser(string username)
+        [HttpGet("GetUser")]
+        public async Task<IActionResult> GetUser()
         {
             try
             {
+                var username = User.GetUserName();
                 var user = await _accountService.GetUserByUserNameAsync(username);
 
                 return Ok(user);
@@ -55,7 +58,7 @@ namespace Eventos.API.Controllers
             }
             catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recurepar usuário. Erro: {ex.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar registrar usuário. Erro: {ex.Message}");
             }
         }
 
@@ -79,7 +82,27 @@ namespace Eventos.API.Controllers
             }
             catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar recurepar usuário. Erro: {ex.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar realizar login. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPut("UpdateUser")]
+        public async Task<IActionResult> UpdateUser(UserUpdateDto userUpdateDto)
+        {
+            try
+            {
+                var user = await _accountService.GetUserByUserNameAsync(User.GetUserName());
+                if(user == null) return Unauthorized("Usuário inválido");
+
+                var userReturn = await _accountService.UpdateAccount(userUpdateDto);
+                if(userReturn == null)
+                    return NoContent();
+
+                return Ok(userReturn);
+            }
+            catch (System.Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar atualizar usuário. Erro: {ex.Message}");
             }
         }
     }

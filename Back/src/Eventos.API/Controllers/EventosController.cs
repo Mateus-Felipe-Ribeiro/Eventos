@@ -7,9 +7,12 @@ using Eventos.Application.Dtos;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.Linq;
+using Eventos.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Eventos.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventosController : ControllerBase
@@ -17,11 +20,13 @@ namespace Eventos.API.Controllers
         
         private readonly IEventoService _eventoService;
         private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IAccountService _accountService;
 
-        public EventosController(IEventoService eventoService, IWebHostEnvironment HostEnvironment)
+        public EventosController(IEventoService eventoService,IAccountService accountService, IWebHostEnvironment HostEnvironment)
         {
-            this._hostEnvironment = HostEnvironment;
-            this._eventoService = eventoService;
+            _accountService = accountService;
+            _hostEnvironment = HostEnvironment;
+            _eventoService = eventoService;
         }
 
         [HttpGet]
@@ -29,7 +34,7 @@ namespace Eventos.API.Controllers
         {
             try
             {
-                var eventos = await _eventoService.GetAllEventosAsync(true);
+                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(), true);
                 if (eventos == null) return NoContent();
 
                 return Ok(eventos);
@@ -45,7 +50,7 @@ namespace Eventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -61,7 +66,7 @@ namespace Eventos.API.Controllers
         {
             try
             {
-                var evento = await _eventoService.GetEventosByTemaAsync(tema, true);
+                var evento = await _eventoService.GetEventosByTemaAsync(User.GetUserId(), tema, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -76,7 +81,7 @@ namespace Eventos.API.Controllers
         public async Task<IActionResult> UploadImage(int eventoId){
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(eventoId, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), eventoId, true);
                 if (evento == null) return BadRequest("Erro ao inserir evento.");
 
                 var file = Request.Form.Files[0];
@@ -85,7 +90,7 @@ namespace Eventos.API.Controllers
                     DeleteImage(evento.ImagemURL);
                     evento.ImagemURL = await SaveImage(file);
                 }
-                var retorno = await _eventoService.UpdateEvento(eventoId, evento);
+                var retorno = await _eventoService.UpdateEvento(User.GetUserId(), eventoId, evento);
 
                 return Ok(retorno);
             }
@@ -99,7 +104,7 @@ namespace Eventos.API.Controllers
         public async Task<IActionResult> Post(EventoDto model){
             try
             {
-                var evento = await _eventoService.AddEvento(model);
+                var evento = await _eventoService.AddEvento(User.GetUserId(), model);
                 if (evento == null) return BadRequest("Erro ao inserir evento.");
 
                 return Ok(evento);
@@ -114,7 +119,7 @@ namespace Eventos.API.Controllers
         public async Task<IActionResult> Put(int id, EventoDto model){
             try
             {
-                var evento = await _eventoService.UpdateEvento(id, model);
+                var evento = await _eventoService.UpdateEvento(User.GetUserId(), id, model);
                 if (evento == null) return BadRequest("Erro ao atualizar evento.");
 
                 return Ok(evento);
@@ -129,10 +134,10 @@ namespace Eventos.API.Controllers
         public async Task<IActionResult> Delete(int id){
             try
             {
-                var evento = await _eventoService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id, true);
                 if (evento == null) return NoContent();
 
-                if(await _eventoService.DeleteEvento(id))
+                if(await _eventoService.DeleteEvento(User.GetUserId(), id))
                 {
                     DeleteImage(evento.ImagemURL);
                     return Ok(new { message = "Evento deletedo" });
