@@ -1,13 +1,13 @@
 using System.Threading.Tasks;
 using Eventos.Domain;
+using Eventos.Persistence.models;
 
 namespace Eventos.Persistence.Contratos
 {
     public interface IEventoPersist
     {
         //Eventos
-        Task<Evento[]> GetEventosByTemaAsync(int userId, string tema, bool includePalestrantes);
-        Task<Evento[]> GetAllEventosAsync(int userId, bool includePalestrantes);
-        Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includePalestrantes);
+        Task<PageList<Evento>> GetAllEventosAsync(int userId, PageParams pageParams, bool includePalestrantes = false);
+        Task<Evento> GetEventoByIdAsync(int userId, int eventoId, bool includePalestrantes = false);
     }
 }

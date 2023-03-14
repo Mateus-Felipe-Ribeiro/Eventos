@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Eventos.Application.Dtos;
+using Eventos.Persistence.models;
 
 namespace Eventos.Application.Contratos
 {
@@ -9,8 +10,7 @@ namespace Eventos.Application.Contratos
         Task<EventoDto> UpdateEvento(int userId, int eventoId, EventoDto model);
         Task<bool> DeleteEvento(int userId, int eventoId);
 
-        Task<EventoDto[]> GetEventosByTemaAsync(int userId, string tema, bool includePalestrantes = false);
-        Task<EventoDto[]> GetAllEventosAsync(int userId, bool includePalestrantes = false);
+        Task<PageList<EventoDto>> GetAllEventosAsync(int userId, PageParams pageParams, bool includePalestrantes = false);
         Task<EventoDto> GetEventoByIdAsync(int userId, int eventoId, bool includePalestrantes = false);
     }
 }

@@ -9,7 +9,7 @@
           type="text"
           class="form-control"
           placeholder="Buscar por Tema ou Local"
-          [(ngModel)]="filtroLista"
+          (input)="filtrarEventos($event.target)"
           aria-label="buscar"
           aria-describedby="buscar"
         />
@@ -45,7 +45,11 @@
         </tr>
       </thead>
       <tbody *ngIf="eventos && eventos.length">
-        <tr *ngFor="let evento of eventosFiltrados" (click)="detalheEvento(evento.id)" style="cursor: pointer;">
+        <tr
+          *ngFor="let evento of eventos"
+          (click)="detalheEvento(evento.id)"
+          style="cursor: pointer"
+        >
           <td>
             <img
               [collapse]="!mostrarImagem"
@@ -62,7 +66,12 @@
           <td>{{ evento.qtdPessoas }}</td>
           <td>{{ evento.lotes[0]?.nome }}</td>
           <td>
-            <button type="button" class="btn btn-warning me-2" tooltip="Editar" (click)="detalheEvento(evento.id)">
+            <button
+              type="button"
+              class="btn btn-warning me-2"
+              tooltip="Editar"
+              (click)="detalheEvento(evento.id)"
+            >
               <i class="fa fa-pencil"></i>
             </button>
             <button
@@ -84,12 +93,29 @@
         </tr>
       </tfoot>
     </table>
+    <div class="d-flex justify-content-center">
+      <pagination
+        [boundaryLinks]="true"
+
+        [totalItems]="pagination.totalItems"
+        [itemsPerPage]="pagination.itemsPerPage"
+        [(ngModel)]="pagination.currentPage"
+        (pageChanged)="pageChanged($event)"
+
+        pageBtnClass="btn"
+        previousText="&lsaquo;"
+        nextText="&rsaquo;"
+        firstText="&laquo;"
+        lastText="&raquo;"
+      >
+      </pagination>
+    </div>
   </div>
 </div>
 
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Você tem certeza que deseja excluir o Evento código {{eventoId}} ?</p>
+    <p>Você tem certeza que deseja excluir o Evento código {{ eventoId }} ?</p>
     <button type="button" class="btn btn-default" (click)="confirm()">
       Sim
     </button>
