@@ -13,98 +13,95 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Eventos.API.Controllers
 {
-    public class PalestranteController
+    [Authorize]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PalestrantesController : ControllerBase
     {
-        [Authorize]
-        [ApiController]
-        [Route("api/[controller]")]
-        public class PalestrantesController : ControllerBase
+        private readonly IPalestranteService _palestranteService;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IAccountService _accountService;
+
+        public PalestrantesController(IPalestranteService palestranteService,
+                                      IWebHostEnvironment hostEnvironment,
+                                      IAccountService accountService)
         {
-            private readonly IPalestranteService _palestranteService;
-            private readonly IWebHostEnvironment _hostEnvironment;
-            private readonly IAccountService _accountService;
+            _hostEnvironment = hostEnvironment;
+            _accountService = accountService;
+            _palestranteService = palestranteService;
+        }
 
-            public PalestrantesController(IPalestranteService palestranteService,
-                                          IWebHostEnvironment hostEnvironment,
-                                          IAccountService accountService)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAll([FromQuery]PageParams pageParams)
+        {
+            try
             {
-                _hostEnvironment = hostEnvironment;
-                _accountService = accountService;
-                _palestranteService = palestranteService;
+                var palestrantes = await _palestranteService.GetAllPalestrantesAsync(pageParams, true);
+                if (palestrantes == null) return NoContent();
+
+                Response.AddPagination(palestrantes.CurrentPage,
+                                       palestrantes.PageSize,
+                                       palestrantes.TotalCount,
+                                       palestrantes.TotalPages);
+
+                return Ok(palestrantes);
             }
-
-            [HttpGet("all")]
-            public async Task<IActionResult> GetAll([FromQuery] PageParams pageParams)
+            catch (Exception ex)
             {
-                try
-                {
-                    var palestrantes = await _palestranteService.GetAllPalestrantesAsync(pageParams, true);
-                    if (palestrantes == null) return NoContent();
-
-                    Response.AddPagination(palestrantes.CurrentPage,
-                                           palestrantes.PageSize,
-                                           palestrantes.TotalCount,
-                                           palestrantes.TotalPages);
-
-                    return Ok(palestrantes);
-                }
-                catch (Exception ex)
-                {
-                    return this.StatusCode(StatusCodes.Status500InternalServerError,
-                        $"Erro ao tentar recuperar palestrantes. Erro: {ex.Message}");
-                }
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar palestrantes. Erro: {ex.Message}");
             }
+        }
 
-            [HttpGet()]
-            public async Task<IActionResult> GetPalestrantes()
+        [HttpGet()]
+        public async Task<IActionResult> GetPalestrantes()
+        {
+            try
             {
-                try
-                {
-                    var palestrante = await _palestranteService.GetPalestranteByUserIdAsync(User.GetUserId(), true);
-                    if (palestrante == null) return NoContent();
+                var palestrante = await _palestranteService.GetPalestranteByUserIdAsync(User.GetUserId(), true);
+                if (palestrante == null) return NoContent();
 
-                    return Ok(palestrante);
-                }
-                catch (Exception ex)
-                {
-                    return this.StatusCode(StatusCodes.Status500InternalServerError,
-                        $"Erro ao tentar recuperar palestrantes. Erro: {ex.Message}");
-                }
+                return Ok(palestrante);
             }
-
-            [HttpPost]
-            public async Task<IActionResult> Post(PalestranteAddDto model)
+            catch (Exception ex)
             {
-                try
-                {
-                    var palestrante = await _palestranteService.GetPalestranteByUserIdAsync(User.GetUserId(), false);
-                    if (palestrante == null)
-                        palestrante = await _palestranteService.AddPalestrantes(User.GetUserId(), model);
-
-                    return Ok(palestrante);
-                }
-                catch (Exception ex)
-                {
-                    return this.StatusCode(StatusCodes.Status500InternalServerError,
-                        $"Erro ao tentar adicionar palestrante. Erro: {ex.Message}");
-                }
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar recuperar palestrantes. Erro: {ex.Message}");
             }
+        }
 
-            [HttpPut]
-            public async Task<IActionResult> Put(PalestranteUpdateDto model)
+        [HttpPost]
+        public async Task<IActionResult> Post(PalestranteAddDto model)
+        {
+            try
             {
-                try
-                {
-                    var palestrante = await _palestranteService.UpdatePalestrante(User.GetUserId(), model);
-                    if (palestrante == null) return NoContent();
+                var palestrante = await _palestranteService.GetPalestranteByUserIdAsync(User.GetUserId(), false);
+                if (palestrante == null)
+                    palestrante = await _palestranteService.AddPalestrantes(User.GetUserId(), model);
 
-                    return Ok(palestrante);
-                }
-                catch (Exception ex)
-                {
-                    return this.StatusCode(StatusCodes.Status500InternalServerError,
-                        $"Erro ao tentar atualizar palestrante. Erro: {ex.Message}");
-                }
+                return Ok(palestrante);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(PalestranteUpdateDto model)
+        {
+            try
+            {
+                var palestrante = await _palestranteService.UpdatePalestrante(User.GetUserId(), model);
+                if (palestrante == null) return NoContent();
+
+                return Ok(palestrante);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                    $"Erro ao tentar atualizar eventos. Erro: {ex.Message}");
             }
         }
     }
