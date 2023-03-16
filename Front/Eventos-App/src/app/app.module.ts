@@ -11,13 +11,14 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+
 import { TourNgBootstrapModule } from 'ngx-ui-tour-ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxCurrencyModule } from 'ngx-currency';
-
-import { defineLocale } from 'ngx-bootstrap/chronos';
-import { ptBrLocale } from 'ngx-bootstrap/locale';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -42,6 +43,10 @@ import { UserComponent } from './components/user/user.component';
 import { LoginComponent } from './components/user/login/login.component';
 import { RegistrationComponent } from './components/user/registration/registration.component';
 import { HomeComponent } from './components/home/home.component';
+import { PalestranteListaComponent } from './components/palestrantes/palestrante-lista/palestrante-lista.component';
+import { PalestranteDetalheComponent } from './components/palestrantes/palestrante-detalhe/palestrante-detalhe.component';
+import { RedesSociaisComponent } from './components/redesSociais/redesSociais.component';
+import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
 
 defineLocale('pt-br', ptBrLocale);
 @NgModule({
@@ -60,7 +65,11 @@ defineLocale('pt-br', ptBrLocale);
     UserComponent,
     LoginComponent,
     RegistrationComponent,
-    HomeComponent
+    HomeComponent,
+    PalestranteListaComponent,
+    PalestranteDetalheComponent,
+    RedesSociaisComponent,
+    PerfilDetalheComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +94,7 @@ defineLocale('pt-br', ptBrLocale);
     BsDatepickerModule.forRoot(),
     NgxCurrencyModule,
     PaginationModule.forRoot(),
+    TabsModule.forRoot(),
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [

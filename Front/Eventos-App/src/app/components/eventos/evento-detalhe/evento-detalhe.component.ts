@@ -90,9 +90,9 @@ export class EventoDetalheComponent implements OnInit {
           (evento: Evento) => {
             this.evento = { ...evento };
             this.form.patchValue(this.evento);
-            this.evento.lotes.forEach(lote => {
-              this.lotes.push(this.criarLote(lote));
-            })
+            // this.evento.lotes.forEach(lote => {
+            //   this.lotes.push(this.criarLote(lote));
+            // })
             if(this.evento.imagemURL !== ''){
               this.imagemURL = environment.apiURL+'resources/images/'+this.evento.imagemURL;
             }

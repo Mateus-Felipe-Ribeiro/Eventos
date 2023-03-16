@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Eventos.API.Helpers
 {
-    public class Util : IUtil
+     public class Util : IUtil
     {
         private readonly IWebHostEnvironment _hostEnvironment;
         public Util(IWebHostEnvironment hostEnvironment)
