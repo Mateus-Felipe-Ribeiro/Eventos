@@ -55,13 +55,25 @@ export class AccountService {
 
   logout(): void {
     localStorage.removeItem('user');
-    this.currentUserSource.next(null);
+    this.updateLoggedIn();
+    // this.currentUserSource.next(null);
     this.currentUserSource.complete();
   }
 
   public setCurrentUser(user: User): void {
     localStorage.setItem('user', JSON.stringify(user));
-    this.currentUserSource.next(user);
+    // this.currentUserSource.next(user);
+    this.updateLoggedIn();
+  }
+
+  updateLoggedIn(): void {
+    const json = localStorage.getItem('user');
+    let user = JSON.parse(json);
+    if(user){
+      this.currentUserSource.next(user);
+    }else{
+      this.currentUserSource.next(null);
+    }
   }
 
 
