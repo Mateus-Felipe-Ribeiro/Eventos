@@ -56,13 +56,11 @@ export class AccountService {
   logout(): void {
     localStorage.removeItem('user');
     this.updateLoggedIn();
-    // this.currentUserSource.next(null);
     this.currentUserSource.complete();
   }
 
   public setCurrentUser(user: User): void {
     localStorage.setItem('user', JSON.stringify(user));
-    // this.currentUserSource.next(user);
     this.updateLoggedIn();
   }
 
