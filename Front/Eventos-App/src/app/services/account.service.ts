@@ -56,7 +56,7 @@ export class AccountService {
   logout(): void {
     localStorage.removeItem('user');
     this.updateLoggedIn();
-    this.currentUserSource.complete();
+    // this.currentUserSource.complete();
   }
 
   public setCurrentUser(user: User): void {
